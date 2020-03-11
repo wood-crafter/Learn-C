@@ -16,12 +16,19 @@ int main() {
 	
 	printf("The original array: \n");
 	i = 0;
-	int uniqueCount = 0;
+	int uniqueCount = 1;
+	uniqueArray[0] = userArray[0];
+	
 	for(; i < arraySize; i++){
+		int j = 0;
 		printf("%c  ", userArray[i]);
-		if(myIndexOf(uniqueArray, uniqueCount, userArray[i]) == -1){
-			uniqueArray[uniqueCount] = userArray[i];
-			uniqueCount++;
+		for(; j < uniqueCount ; j++){
+			if(uniqueArray[j] == userArray[i]){
+				break;
+			} else if(j == uniqueCount - 1){
+				uniqueArray[uniqueCount] = userArray[i];
+				uniqueCount += 1;
+			}
 		}
 	}
 	
@@ -36,15 +43,6 @@ int main() {
 	
 }
 
-int myIndexOf(char* arr, int size, char value){
-	int i = 0;
-	for(; i < size; i++){
-		if(value == arr[i]){
-			return i;
-		}
-	}
-	return -1;
-}
 
 int checkInputInt(char* msg, int MIN, int MAX) {
     int num, check;
