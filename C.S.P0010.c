@@ -14,46 +14,20 @@ int main() {
 		fflush(stdin);
 	}
 	
-	i = 0;
-//	for(; i < arraySize; i++) {
-//		int j = 0;
-//		for(; j < arraySize ; j++) {
-//			if(j != i && userArray[i] == userArray[j]){
-//				numOfDuplicate = numOfDuplicate + 1;
-//			}
-//		}
-//	}
-//	numOfDuplicate = numOfDuplicate / 2;
-	
 	printf("The original array: \n");
 	i = 0;
 	for(; i < arraySize; i++){
 		printf("%c  ", userArray[i]);
 	}
 	
-	char newArray[arraySize - numOfDuplicate];
-	i = 1;
-	newArray[0] = userArray[0];
-	for(; i < arraySize; i++) {
-		int j = 0;
-		
-		for(; j < arraySize - numOfDuplicate; j++){
-		    if(userArray[i] == newArray[j]){
-		    	break;
-			} else if(j == arraySize - numOfDuplicate - 1){
-				newArray[j] = userArray[i];
-			}
-    	    
-		}
-	}
+	
 	    
-	i = 0;
-	printf("\nThe array after removing duplicate elements: \n");
-	for(; i < arraySize - numOfDuplicate; i++){
-		printf("%c  ", newArray[i]);
-	}
-	
-	
+//	i = 0;
+//	printf("\nThe array after removing duplicate elements: \n");
+//	for(; i < arraySize ; i++){
+//		printf("%c  ", newArray[i]);
+//	}
+//	
 	
 }
 
