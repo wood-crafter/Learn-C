@@ -16,7 +16,7 @@ int main(){
     char wordToGuess[20];
     char puzzle[20];
     int wordCount = 0;
-    int wordListSize = 10;
+    int wordListSize = 1;
     char **wordList;
     
     wordList = (char**) malloc(wordListSize * WORD_SIZE);
@@ -32,8 +32,8 @@ int main(){
 //    free(ptr);
 //    return 0;
     
-//    printf("What file stores the puzzle words?\n");
-//    scanf("%20[^\n]", fileName);
+    printf("What file stores the puzzle words?\n");
+    scanf("%20[^\n]", fileName);
     FILE *file;
     file = fopen(fileName, "r");
     if (file == NULL) {
@@ -42,37 +42,21 @@ int main(){
 	}
 
 //TODO: read wordList from file
-    while(1){
-    	char c[10];
-    	if(fscanf(file, "%s", c) == EOF){
-    		break;
-		}
-		
-    	wordList[wordCount] = c;
-    	printf("%s", wordList[0]);
+    while(fscanf(file, "%s", wordList[wordCount]) != EOF){
+    	printf("%s", wordList[wordCount]);
     	wordCount += 1;
-//    	printf("%d\n", wordCount);
 //    	if(wordCount == wordListSize){
 //    		wordListSize *= 2;
 //    		wordList = (char**) realloc(wordList, wordListSize * WORD_SIZE);
-//    		printf("%d", wordListSize);
-//    		printf("%d", wordCount);
 //		}
 	}
-//	return 0;
 	int j = 0;
-//	for(;j < wordCount;j++){
-//		printf("%s", wordList[j]);
-//	}
+	for(;j < wordCount;j++){
+		printf("%s", wordList[j]);
+	}
 	return 0;
 //TODO: rand index from wordList
 //TODO: Add this index to blackList
-	
-	
-//    	char a[30] , b[30], c[30];
-//    	fscanf(file, "%s", a);
-//    	fscanf(file, "%s", b);
-//    	printf("%s %s \n%s", a, b, c);
 
 //Read again
 //if(fscanf(file, "%s", c) == EOF){
