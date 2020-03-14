@@ -10,7 +10,7 @@ int main(){
     int toContinue = 1;
     char userGuess;
     char guessedLetter[26];
-    char fileName[21] = "file.txt";
+    char fileName[21];
     int numOfLetter = 0;
     int incorrectNum = 0;
     char wordToGuess[20];
@@ -20,17 +20,6 @@ int main(){
     char **wordList;
     
     wordList = (char**) malloc(wordListSize * WORD_SIZE);
-    
-    //    char **ptr;
-//    ptr = (char**) malloc(1 * (10 * sizeof(char)));
-//    ptr[0] = "hung";
-//    
-//    ptr = (int*) realloc(ptr, 2 * 10 * sizeof(int));
-//    
-//    ptr[1] = "hoang";
-//    printf("%s %s", ptr[0], ptr[1]);
-//    free(ptr);
-//    return 0;
     
     printf("What file stores the puzzle words?\n");
     scanf("%20[^\n]", fileName);
@@ -42,14 +31,20 @@ int main(){
 	}
 
 //TODO: read wordList from file
-    while(fscanf(file, "%s", wordList[wordCount]) != EOF){
-    	printf("%s", wordList[wordCount]);
+while(1){
+    	wordList[wordCount] = malloc(WORD_SIZE);
+    	if (fscanf(file, "%s", wordList[wordCount]) == EOF) {
+    		break;
+		}
+
     	wordCount += 1;
-//    	if(wordCount == wordListSize){
-//    		wordListSize *= 2;
-//    		wordList = (char**) realloc(wordList, wordListSize * WORD_SIZE);
-//		}
+
+    	if(wordCount == wordListSize){
+    		wordListSize *= 2;
+    		wordList = (char**) realloc(wordList, wordListSize * sizeof(char*));
+		}
 	}
+
 	int j = 0;
 	for(;j < wordCount;j++){
 		printf("%s", wordList[j]);
