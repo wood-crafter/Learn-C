@@ -6,7 +6,7 @@ void showPuzzle(char userGuess, char* puzzle, char* wordToGuess);
 int randWordIndex(int* blackList, int wordCount, int playTimes);
 
 int main(){
-	int WORD_SIZE = 10 * sizeof(char);
+	int WORD_SIZE = 15 * sizeof(char);
     int userChoice = 13;
     int toContinue = 1;
     char userGuess;
@@ -51,14 +51,6 @@ while(1){
   	
   	while(userChoice == 13){
   		toContinue = 1;
-  		while(toContinue){
-  			printf("Press Enter to play, press ESC to exit\n");
-  			userChoice = getch();
-  			if (userChoice == 13)
-                toContinue = 0;
-            if (userChoice == 27)
-                break;
-        }
         int indexWord = randWordIndex(blackList, wordCount, playTimes);
         playTimes += 1;
         int boolen = 1;
@@ -66,13 +58,14 @@ while(1){
         for(; k < strlen(wordList[indexWord]); k++){
         	puzzle[k] = '-';
 		}
+		k = 0;
         
         //TOFIX: HAVE TO GUESS 2 times for 1 same latter
         while(boolen){
         	printf("Enter your guess: ");
             userGuess = getch();
             printf("%c\n", userGuess);
-            int check = checkLetter(userGuess, wordList[indexWord], guessedLetter, numOfLetter) == 2;
+            int check = checkLetter(userGuess, wordList[indexWord], guessedLetter, numOfLetter);
             if(check == 0){
         	    incorrectNum += 1;
         	    numOfLetter += 1;
@@ -80,28 +73,60 @@ while(1){
         	
         	    printf("\nSorry, the letter is NOT in the puzzle\n");
         	    printf("You currently have %d incorrect guesses!\n", incorrectNum);
+        	    if(incorrectNum == 5){
+            		printf("The puzzle was %s\n", wordList[indexWord]);
+            		printf("Game over!");
+            		return 0;
+				}
         	    printf("Here is your puzzle:\n");
         	    printf("%s\n", puzzle);
 		    }
 		
 		    if(check == 1){
+		    	int length = strlen(puzzle);
                 numOfLetter += 1;
             	guessedLetter[numOfLetter - 1] = userGuess;
+            	printf("Congratulation, you have guessed the right letter in puzzle!\n");
+            	printf("You currently have %d incorrect guesses!\n", incorrectNum);
             
                 showPuzzle(userGuess, puzzle, wordList[indexWord]);
+                for(; k < length; k++){
+                	if(puzzle[k] == '-'){
+                		k = length - 1;
+                		continue;
+					}
+					if(k == length - 1){
+						printf("Congratulation, you got the correct word %s\n\n\n", wordList[indexWord]);
+						boolen = 0;
+					}
+				}
+				k = 0;
 	    	}
 		
 		    if(check == 2){
 		    	incorrectNum += 1;
             	printf("Sorry, you have guessed that letter already\n");
-            	printf("Now it count a miss!");
+            	printf("Now it count a miss!\n");
             	printf("You currently have %d incorrect guesses!\n", incorrectNum);
+            	if(incorrectNum == 5){
+            		printf("The puzzle was %s\n", wordList[indexWord]);
+            		printf("Game over!");
+            		return 0;
+				}
             	printf("Here is your puzzle:\n");
             	printf("%s", puzzle);
         	
 	    	}
 		}
 		
+		while(toContinue){
+  			printf("Press Enter to play, press ESC to exit\n");
+  			userChoice = getch();
+  	    	if (userChoice == 13)
+                toContinue = 0;
+            if (userChoice == 27)
+                break;
+        }
 	}
     
     
@@ -128,6 +153,7 @@ int randWordIndex(int* blackList, int wordCount, int playTimes){
 }
 
 int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numOfLetter) {
+	int length = strlen(wordToGuess);
 	int i = 0;
 	
 	for(; i < numOfLetter ; i++){
@@ -137,7 +163,7 @@ int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numO
 	}
 	
 	i = 0;
-	for(; i < 11; i++){
+	for(; i < length; i++){
 		if(userGuess == wordToGuess[i]){
 			return 1;
 		}
@@ -148,9 +174,10 @@ int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numO
 
 //TOFIX: inform
 void showPuzzle(char userGuess, char* puzzle, char* wordToGuess){
+	int length = strlen(wordToGuess);
 	int i = 0;
 	
-	for(; i < 11; i++){
+	for(; i < length; i++){
 		if(userGuess == wordToGuess[i]){
 			puzzle[i] = wordToGuess[i];
 		}
