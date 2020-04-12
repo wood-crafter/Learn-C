@@ -5,14 +5,8 @@
 int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numOfLetter);
 void showPuzzle(char userGuess, char* puzzle, char* wordToGuess);
 int randWordIndex(int* blackList, int wordCount, int playTimes);
-int checkInputInt(char* msg, int MIN, int MAX);
 int isBadWord(char* word);
-void appendFile(char* fileName, char* content) {
-    FILE *file;
-    file = fopen(fileName, "a");
-    fprintf(file, "%s\n", content);
-	fclose(file);
-}
+void appendFile(char* fileName, char* content);
 
 int main() {
 	int WORD_SIZE = 15 * sizeof(char);
@@ -272,30 +266,11 @@ void showPuzzle(char userGuess, char* puzzle, char* wordToGuess){
     printf("%s\n", puzzle);
 }
 
-int checkInputInt(char* msg, int MIN, int MAX) {
-    int num, check;
-    char ch;
-
-    while (1) {
-        printf("%s", msg);
-
-        check = scanf("%d%c", &num, &ch);
-        
-        if (check != 2 || ch != '\n') {
-            printf("Invalid input, please enter integer only\n");
-
-            // Clear the buffer
-            // while ((getchar()) != '\n'); 
-            fflush(stdin);
-            continue;
-        }
-
-        if (num < MIN || MAX < num) {
-            printf("Out of range, please enter integer between %d and %d\n", MIN, MAX);
-            continue;
-        }
-
-        return num;
-    }
+void appendFile(char* fileName, char* content) {
+    FILE *file;
+    file = fopen(fileName, "a");
+    fprintf(file, "%s\n", content);
+	fclose(file);
 }
+
 
