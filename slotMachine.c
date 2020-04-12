@@ -2,13 +2,26 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
+#include <string.h>
 
-int delay();
-float checkNumber(number);
+int delay(int time);
+float checkNumber(int number);
+int loadCards(char codeList[5][8], int cardStatus[5]) {
+	int wordCount = 0;
+
+	FILE *recharge = fopen("rechargeCode.txt", "r");
+
+    while(fscanf(recharge, "%s %d", codeList[wordCount], &cardStatus[wordCount]) != EOF){
+		wordCount += 1;
+    }
+
+    fclose(recharge);
+    
+    return wordCount;
+}
 
 int main()
 {
-	
   char userName[21];
   float userMoney;
   float fee = 0.25;
@@ -28,6 +41,7 @@ int main()
       file = fopen(userName, "r");
       if (file != NULL) {
   	    if(fscanf(file, "%s %f", userName, &userMoney) == 2){
+  	    	fclose(file);
   		    printf("You have %f$", userMoney);
   		    userChoice = 1;
 	      }
@@ -86,6 +100,7 @@ int main()
         printf("You have %f$\n", userMoney);
         printf("Press'Enter' to play, 'ESC' to exit...\n");
         userChoice = getch();
+        fflush(stdin);
         if (userChoice == 13)
           toContinue = 0;
         if (userChoice == 27)
@@ -97,18 +112,57 @@ int main()
         	randomNumber = rand() % 1000 + 1;
             userMoney += checkNumber(randomNumber);
 //FIXED: Save right after here
-        file = fopen(userName, "w+");
-        fprintf(file, "%s %f\n", userName, userMoney);
-        fclose(file);
+            file = fopen(userName, "w+");
+            fprintf(file, "%s %f\n", userName, userMoney);
+            fclose(file);
 		}
 
         printf("The number is %d\n", randomNumber);
 
         if (userMoney <= 0){
-        	
-        printf("Sorry, you have not enough money to play!");
-        userChoice = 0;
-        delay(500);
+            printf("Sorry, you have not enough money to play!\n");
+            
+            toContinue = 1;
+        	while(toContinue){
+        		printf("Press 'Enter' to recharge, 'ESC' to exit:\n");
+                userChoice = getch();
+            
+                if(userChoice == 13){
+					char codeList[5][8];
+					int cardStatus[5];
+					int wordCount = loadCards(codeList, cardStatus);
+
+            	    printf("Enter code of card:");
+					
+					char cardCode[8];
+            	    scanf("%7[^\n]", cardCode);
+            	    int i = 0;
+            	    for(; i < wordCount; i++){
+            	    	if(strcmp(codeList[i], cardCode) == 0 && cardStatus[i] == 0){
+            	    		userMoney = userMoney + 10;
+            	    		printf("\n\nYou have %f", userMoney);
+            	    		file = fopen(userName, "w+");
+                            fprintf(file, "%s %f\n", userName, userMoney);
+                            fclose(file);
+            	    		continue;
+            	    		
+						}
+						if(i == wordCount - 1){
+							printf("Invalid code of card");
+						}
+					}
+            	    userChoice = 0;
+			    }
+			    
+			    if(userChoice == 27){
+			    	break;
+				}
+			}
+            	
+
+            
+            userChoice = 0;
+            delay(500);
         }
     }
 
@@ -125,8 +179,8 @@ int main()
   
 }
 
-int delay(time){
-	
+int delay(int time){
+	return 0;
   int c, d;
   for (c = 1; c <= 50 * time; c++){
   	for (d = 1; d <= 50 * time; d++){
@@ -138,7 +192,7 @@ int delay(time){
   return 0;
 }
 
-float checkNumber(number){
+float checkNumber(int number){
 	
   int a;
   int b;
