@@ -1,19 +1,18 @@
 #include <stdio.h>
 
 int main() {
-	int arraySize;
 	int i = 0;
 	
-	arraySize = checkInputInt("Enter number of elements:  ", 1, 1000);
-	char userArray[arraySize];
+	
+	char* userArray;
+    int arraySize = 0;
+    printf("Enter string: ");
+    userArray = (char*) malloc(sizeof(char));
+	enterString(userArray, arraySize);
+	arraySize = strlen(userArray) - 1;
+	
+	
 	char uniqueArray[arraySize];
-	
-	for(; i < arraySize; i++){
-		printf("Enter element #%d: ", i);
-		scanf("%c", &userArray[i]);
-		fflush(stdin);
-	}
-	
 	printf("The original array: \n");
 	i = 0;
 	int uniqueCount = 1;
@@ -21,7 +20,8 @@ int main() {
 	
 	for(; i < arraySize; i++){
 		int j = 0;
-		printf("%c  ", userArray[i]);
+		printf("%c ", userArray[i]);
+		
 		for(; j < uniqueCount ; j++){
 			if(uniqueArray[j] == userArray[i]){
 				break;
@@ -37,7 +37,7 @@ int main() {
 	i = 0;
 	printf("\nThe array after removing duplicate elements: \n");
 	for(; i < uniqueCount ; i++){
-		printf("%c  ", uniqueArray[i]);
+		printf("%c ", uniqueArray[i]);
 	}
 	
 	
@@ -70,3 +70,19 @@ int checkInputInt(char* msg, int MIN, int MAX) {
         return num;
     }
 }
+
+void enterString(char* string, int StringSize){
+	StringSize += 1;
+    char c;
+    scanf("%c", &c);
+    string[StringSize - 1] = c;
+    string = (char*) realloc(string,(StringSize + 1) * sizeof(char));
+    
+    if(c != '\n'){
+        enterString(string, StringSize);
+    } else{
+    	string[StringSize] = NULL;
+	}
+	
+}
+

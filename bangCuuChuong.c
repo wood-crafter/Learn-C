@@ -1,32 +1,35 @@
 #include <stdio.h>
 
+
 int main(){
 	int userNum;
-	int userChoice = 13;
+	char userChoice;
 	int toContinue = 1;
 	int i = 1;
+	int boolean = 1;
 	
-	while(userChoice == 13){
+	while(1){
 		toContinue = 1;
 		i = 1;
-		userNum = checkInputInt("Enter a number (1-9):  ", 1, 1000);
+		userNum = checkInputInt("Enter a number (1-9):  ", 1, 9);
 	    printf("Multiplication table for %d number:\n", userNum);
 	
 	    for(; i < 11; i++){
 		    printf("%d * %d = %d\n", userNum, i, userNum * i);
 	    }
-	    
+	char c;
+	
 	    while(toContinue){
-	    	printf("Press'Enter' to continue, 'ESC' to exit...\n");
-            userChoice = getch();
-            if(userChoice == 13){
-            	toContinue = 0;
-			}
-			if(userChoice == 27){
-				break;
+	    	printf("Press 'Y' to continue, 'N' to exit: ");
+	    	scanf("%c%c", &userChoice, &c);
+	    	userChoice = toupper(userChoice);
+	    	if((userChoice == 'Y' || userChoice == 'N') && c == 13){
+	    		break;
 			}
 		}
-
+if(userChoice == 'N'){
+	break;
+}
 	}
 }
 
@@ -56,3 +59,4 @@ int checkInputInt(char* msg, int MIN, int MAX) {
         return num;
     }
 }
+
