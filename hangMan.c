@@ -6,8 +6,15 @@ int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numO
 void showPuzzle(char userGuess, char* puzzle, char* wordToGuess);
 int randWordIndex(int* blackList, int wordCount, int playTimes);
 int checkInputInt(char* msg, int MIN, int MAX);
+int isBadWord(char* word);
+void appendFile(char* fileName, char* content) {
+    FILE *file;
+    file = fopen(fileName, "a");
+    fprintf(file, "%s\n", content);
+	fclose(file);
+}
 
-int main(){
+int main() {
 	int WORD_SIZE = 15 * sizeof(char);
     int userChoice = 13;
     int toContinue = 1;
@@ -19,29 +26,41 @@ int main(){
     int wordCount = 0;
     int wordListSize = 1;
     char **wordList;
+    char method;
     
-    int method = checkInputInt("Press '0' to add word to file, '1' to play hangman: \n", 0, 1);
+    while(1){
+    	printf("Press '0' to add word to file, '1' to play hangman: \n");
+        method = getch();
+        fflush(stdin);
+        if(method == '0' || method == '1'){
+        	break;
+		}
+	}
     
     switch(method){
-    	case 0:{
-
-    	    char addFile[21];
+    	
+    	//Add word to File
+    	case '0': {
+    	    char fileName[21];
     	    printf("Enter your file name: \n");
-    	    scanf("%20[^\n]", addFile);
+    	    scanf("%20[^\n]", fileName);
     	    fflush(stdin);
     	
     	    while(userChoice == 13){
     		    toContinue = 1;
     		    char newWord[15];
-    		    printf("Enter a word:");
+    		    printf("Enter a word: ");
     		    scanf("%20[^\n]", newWord);
     		    fflush(stdin);
-    		    FILE *file0;
-    		    file0 = fopen(addFile, "a");
-    		    fprintf(file0, "%s\n", newWord);
-            	fclose(file0);
-            	
-            	while(toContinue){
+
+    		    if (isBadWord(newWord)) {
+    		    	printf("%s is not a valid word, please try again\n", newWord);
+    		    	continue;
+				}
+
+				appendFile(fileName, newWord);
+
+            	while(toContinue) {
   					printf("\nPress 'Enter' to add more word, 'ESC' to exit: \n");
   					userChoice = getch();
   	    			if (userChoice == 13)
@@ -52,7 +71,9 @@ int main(){
 			}
 			break;
 		}
-		case 1:{
+		
+		//Play hangman
+		case '1': {
 			
 			wordList = (char**) malloc(wordListSize * WORD_SIZE);
     
@@ -70,9 +91,14 @@ int main(){
 // read wordList from file
 			while(1){
     			wordList[wordCount] = malloc(WORD_SIZE);
-    			if (fscanf(file, "%s", wordList[wordCount]) == EOF) {
+    			if (fscanf(file, "%[^\n]\n", wordList[wordCount]) == EOF) {
     				fflush(stdin);
     				break;
+				}
+                
+                if (isBadWord(wordList[wordCount])) {
+                	printf("The file contains bad format word at line %d", wordCount + 1);
+                	return -1;
 				}
 
     			wordCount += 1;
@@ -100,8 +126,10 @@ int main(){
 				}
 				puzzle[k] = '\n';
 				k = 0;
+				printf("Here is your puzzle:\n");
+        	    printf("%s\n", puzzle);
         
-
+                //Play
         		while(boolen){
         			printf("Enter your guess: ");
             		userGuess = getch();
@@ -160,6 +188,7 @@ int main(){
 	    			}
 				}
 		
+		        //Enter to play
 				while(toContinue){
   					printf("Press Enter to play, press ESC to exit\n");
   					userChoice = getch();
@@ -214,7 +243,22 @@ int checkLetter(char userGuess, char* wordToGuess, char* guessedLetter, int numO
 	return 0;
 }
 
-//TOFIX: inform
+int isBadWord(char* word) {
+	int i = 0;
+
+    for(i; i < strlen(word); i++){
+    	char c = word[i];
+    	int isUpperChar = 65 <= c && c <= 90;
+    	int isLowerChar = 97 <= c && c <= 122;
+    	
+    	if (!isUpperChar && !isLowerChar) {
+    		return -1;
+		}
+	}
+
+	return 0;
+}
+
 void showPuzzle(char userGuess, char* puzzle, char* wordToGuess){
 	int length = strlen(wordToGuess);
 	int i = 0;
