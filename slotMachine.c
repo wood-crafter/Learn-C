@@ -19,6 +19,16 @@ int loadCards(char codeList[5][8], int cardStatus[5]) {
     
     return wordCount;
 }
+void updateCards(char codeList[5][8], int cardStatus[5], int wordCount){
+	FILE *recharge = fopen("rechargeCode.txt", "w");
+    int i = 0;
+    
+    for(; i < wordCount; i++){
+    	fprintf(recharge, "%s %d\n", codeList[i], cardStatus[i]);
+	}
+    
+    fclose(recharge);
+}
 
 int main()
 {
@@ -126,7 +136,7 @@ int main()
         	while(toContinue){
         		printf("Press 'Enter' to recharge, 'ESC' to exit:\n");
                 userChoice = getch();
-            
+
                 if(userChoice == 13){
 					char codeList[5][8];
 					int cardStatus[5];
@@ -136,19 +146,19 @@ int main()
 					
 					char cardCode[8];
             	    scanf("%7[^\n]", cardCode);
+            	    fflush(stdin);
             	    int i = 0;
             	    for(; i < wordCount; i++){
             	    	if(strcmp(codeList[i], cardCode) == 0 && cardStatus[i] == 0){
+            	    		cardStatus[i] = 1;
             	    		userMoney = userMoney + 10;
-            	    		printf("\n\nYou have %f", userMoney);
+            	    		printf("\n\nYou have %f\n", userMoney);
             	    		file = fopen(userName, "w+");
                             fprintf(file, "%s %f\n", userName, userMoney);
                             fclose(file);
+                            updateCards(codeList, cardStatus, wordCount);
             	    		continue;
             	    		
-						}
-						if(i == wordCount - 1){
-							printf("Invalid code of card");
 						}
 					}
             	    userChoice = 0;
